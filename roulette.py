@@ -64,6 +64,13 @@ custom_css = f"""
     opacity: 0.8 !important;
     border: 1px solid white !important;
 }}
+/* --- MOBILE-ONLY GRID OVERRIDE --- */
+@media (max-width: 600px) 
+.stButton {{
+        width: 23% !important;  /* roughly 4 per row */
+        display: inline-block !important;
+        margin: 2px !important;
+    }}
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
