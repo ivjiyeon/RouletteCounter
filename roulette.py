@@ -45,32 +45,47 @@ black_selectors = ", ".join([f".st-key-btn_{i} button" for i in range(1, 37) if 
 
 custom_css = f"""
 <style>
+div[data-testid="stButton"] button {{
+    border: 2px solid #D9D9D9 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+    color: white !important;
+    font-weight: bold;
+}}
 /* Styling for Red Number Buttons */
 {red_selectors} {{
     background-color: #D32F2F !important;
-    color: white !important;
-    border: 1px solid #D32F2F !important;
-    font-weight: bold;
 }}
 /* Styling for Black Number Buttons */
 {black_selectors} {{
     background-color: #1A1D20 !important;
-    color: white !important;
-    border: 1px solid #1A1D20 !important;
-    font-weight: bold;
 }}
-/* Hover Effects */
-{red_selectors}:hover, {black_selectors}:hover {{
+/* Hover */
+div[data-testid="stButton"] button:hover {{
     opacity: 0.8 !important;
-    border: 1px solid white !important;
+    border-color: #FFF !important;
 }}
-/* --- MOBILE-ONLY GRID OVERRIDE --- */
-@media (max-width: 600px) 
-.stButton {{
-        width: 23% !important;  /* roughly 4 per row */
-        display: inline-block !important;
-        margin: 2px !important;
+@media (max-width: 768px) {{
+    .st-key-btn_grid div[data-testid="stHorizontalBlock"] {{
+        flex-wrap: wrap !important;
+        overflow: visible !important;
     }}
+    .st-key-btn_grid div[data-testid="stColumn"] {{
+        flex: 0 0 24% !important;
+        min-width: 24% !important;
+        max-width: 24% !important;
+        overflow: visible !important;
+    }}
+    .st-key-box_grid div[data-testid="stHorizontalBlock"] {{
+        flex-wrap: wrap !important;
+        overflow: visible !important;
+    }}
+    .st-key-box_grid div[data-testid="stColumn"] {{
+        flex: 0 0 48% !important;
+        min-width: 48% !important;
+        max-width: 48% !important;
+    }}
+}}
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
@@ -78,20 +93,29 @@ st.markdown(custom_css, unsafe_allow_html=True)
 
 st.title("Roulette Number Tracker")
 
-# 1. Number Buttons (1-36)
+# ---- 1. Number Buttons ----
 st.subheader("Select a Number")
-cols = st.columns(6)
-for i in range(1, 37):
-    with cols[(i - 1) % 6]:
-        # The key parameter here matches the CSS injected above
-        st.button(str(i), key=f"btn_{i}", on_click=record_number, args=(i,), use_container_width=True)
+with st.container(key="btn_grid"):
+    for row in range(6):           # 6 rows × 6 buttons = 36
+        cols = st.columns(6)
+        for j in range(6):
+            i = row * 6 + j + 1   # always 1-36 in order
+            with cols[j]:
+                st.button(
+                    str(i),
+                    key=f"btn_{i}",
+                    on_click=record_number,
+                    args=(i,),
+                    use_container_width=True
+                )
 
-# 2. Box Counters
+# ---- 2. Box Counters ----
 st.subheader("Box Counters")
-box_cols = st.columns(4)
-for idx, box in enumerate(BOXES):
-    with box_cols[idx % 4]:
-        st.metric(label=box, value=st.session_state.box_counts[box])
+with st.container(key="box_grid"):
+    box_cols = st.columns(4)
+    for idx, box in enumerate(BOXES):
+        with box_cols[idx % 4]:
+            st.metric(label=box, value=st.session_state.box_counts[box])
 
 st.button("Reset All", on_click=reset_all, type="primary")
 
