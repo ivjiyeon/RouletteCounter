@@ -67,6 +67,7 @@ div[data-testid="stButton"] button:hover {{
 }}
 @media (max-width: 768px) {{
     .st-key-btn_grid div[data-testid="stHorizontalBlock"] {{
+        flex-direction: row !important;
         flex-wrap: wrap !important;
         overflow: visible !important;
     }}
@@ -74,9 +75,10 @@ div[data-testid="stButton"] button:hover {{
         flex: 0 0 24% !important;
         min-width: 24% !important;
         max-width: 24% !important;
-        overflow: visible !important;
+        width: 24% !important;
     }}
     .st-key-box_grid div[data-testid="stHorizontalBlock"] {{
+        flex-direction: row !important;
         flex-wrap: wrap !important;
         overflow: visible !important;
     }}
@@ -84,6 +86,7 @@ div[data-testid="stButton"] button:hover {{
         flex: 0 0 48% !important;
         min-width: 48% !important;
         max-width: 48% !important;
+        width: 48% !important;
     }}
 }}
 </style>
